@@ -1,0 +1,51 @@
+.main {
+  padding: 60px 0px;
+
+  h1 {
+    font-weight: 500;
+    font-size: 40px;
+  }
+}
+
+.movie {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 20px 0px 0px 0px;
+
+  .video {
+    width: 80%;
+    aspect-ratio: 16/9;
+
+    .react_player {
+      user-select: none;
+    }
+  }
+
+  .controller {
+    width: 20%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    img {
+      width: 50%;
+      cursor: pointer;
+    }
+
+    .current {
+      margin: 20px 0px 0px 0px;
+      background-color: var(--main);
+      padding: 10px 20px;
+      border-radius: 10px;
+      min-width: 60%;
+      text-align: center;
+      span {
+        font-size: 40px;
+      }
+    }
+  }
+}
