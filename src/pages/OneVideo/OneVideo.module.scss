@@ -38,13 +38,21 @@
 
     .current {
       margin: 20px 0px 0px 0px;
-      background-color: var(--main);
-      padding: 10px 20px;
-      border-radius: 10px;
-      min-width: 60%;
+
       text-align: center;
       span {
+        background-color: var(--main);
+        display: block;
         font-size: 40px;
+        margin: 10px 0px;
+        padding: 15px 20px;
+        min-width: 60%;
+        border-radius: 6px;
+      }
+
+      .push {
+        cursor: pointer;
+        font-size: 30px;
       }
     }
   }

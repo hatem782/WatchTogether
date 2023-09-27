@@ -6,11 +6,10 @@ import ReactPlayer from "react-player";
 import play_icon from "../../assets/svgs/play.svg";
 import pause_icon from "../../assets/svgs/pause.svg";
 import { useParams } from "react-router-dom";
-import { fakeData } from "./fake.js";
+import { firestore } from "../../config/firebase.config";
 
 function OneVideo({ datas }) {
-  const [playing, setPlaying] = useState(false);
-  const [time, setTime] = useState({ hour: 0, minute: 0, second: 0 });
+  const [time, setTime] = useState(0);
   const [itemG, setItemG] = useState({
     id: 1,
     img: "",
@@ -23,26 +22,27 @@ function OneVideo({ datas }) {
     is_going_to: false,
   });
 
-  const togglePlay = () => {
-    setPlaying((prevPlaying) => !prevPlaying);
+  const togglePlay = async () => {
+    let pausing = !itemG.pausing;
+    const res = await firestore
+      .collection("movies")
+      .doc(itemG.id)
+      .set({ ...itemG, pausing: pausing });
+    console.log(res);
+    // .update({ pausing: !pausing });
   };
 
   const params = useParams();
 
   useEffect(() => {
-    if (datas) {
-      console.log(datas);
-      console.log(params.id);
-      const item = datas.find((item) => item.id === Number(params.id));
+    if (datas && datas.length > 0) {
+      const item = datas.find((item) => item.id === params.id);
       setItemG(item);
     }
   }, [params, datas]);
 
   const onProgress = (e) => {
-    let hour = Math.floor(e.playedSeconds / 3600);
-    let minute = Math.floor(e.playedSeconds / 60);
-    let second = Math.floor(e.playedSeconds % 60);
-    setTime({ hour, minute, second });
+    setTime(e.playedSeconds);
   };
 
   const time_fixer = (val) => {
@@ -50,6 +50,14 @@ function OneVideo({ datas }) {
       return `0${val}`;
     }
     return val;
+  };
+
+  const TextTime = () => {
+    let hour = Math.floor(time / 3600);
+    let minute = Math.floor(time / 60);
+    let second = Math.floor(time % 60);
+
+    return `${time_fixer(hour)}:${time_fixer(minute)}:${time_fixer(second)}`;
   };
 
   return (
@@ -61,25 +69,25 @@ function OneVideo({ datas }) {
           <ReactPlayer
             className={styles.react_player}
             url={itemG.video}
-            playing={playing}
+            playing={!itemG.pausing}
             controls
             width="100%"
             height="100%"
+            autoplay={false}
             onProgress={onProgress}
           />
         </div>
         <div className={styles.controller}>
           <img
-            src={playing ? pause_icon : play_icon}
+            src={itemG.pausing ? pause_icon : play_icon}
             alt=""
             onClick={togglePlay}
           />
 
           <div className={styles.current}>
-            <span>
-              {time_fixer(time.hour)}:{time_fixer(time.minute)}:
-              {time_fixer(time.second)}
-            </span>
+            <span>{TextTime()}</span>
+
+            <span className={styles.push}>Push My Time</span>
           </div>
         </div>
       </div>
