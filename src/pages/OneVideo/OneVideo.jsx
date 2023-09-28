@@ -14,7 +14,7 @@ function OneVideo({ datas }) {
     duration: "",
     watched: "",
     video: "https://hatembenechikh100.wistia.com/medias/izjz1tewm8",
-    pausing: false,
+    pausing: true,
     goto: 0,
     is_going_to: false,
   });
@@ -72,6 +72,7 @@ function OneVideo({ datas }) {
             height="100%"
             autoplay={false}
             onPause={Pose}
+            onReady={Pose}
             onPlay={Play}
             onSeek={handleSeek}
           />
