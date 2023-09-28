@@ -8,6 +8,7 @@ function Home({ datas }) {
 
   const goToVideo = (item) => {
     navig(`/play/${item.title.split(" ").join("_")}/${item.id}`);
+    window.location.reload();
   };
 
   return (
