@@ -32,6 +32,26 @@ function OneVideo({ datas }) {
     // .update({ pausing: !pausing });
   };
 
+  const Pose = async () => {
+    let pausing = !itemG.pausing;
+    const res = await firestore
+      .collection("movies")
+      .doc(itemG.id)
+      .set({ ...itemG, pausing: true });
+    console.log(res);
+    // .update({ pausing: !pausing });
+  };
+
+  const Play = async () => {
+    let pausing = !itemG.pausing;
+    const res = await firestore
+      .collection("movies")
+      .doc(itemG.id)
+      .set({ ...itemG, pausing: false });
+    console.log(res);
+    // .update({ pausing: !pausing });
+  };
+
   const params = useParams();
 
   useEffect(() => {
@@ -75,9 +95,13 @@ function OneVideo({ datas }) {
             height="100%"
             autoplay={false}
             onProgress={onProgress}
+            onPause={Pose}
+            onPlay={Play}
+            onClickPreview={() => alert("clicked preview")}
           />
         </div>
-        <div className={styles.controller}>
+
+        {/* <div className={styles.controller}>
           <img
             src={itemG.pausing ? pause_icon : play_icon}
             alt=""
@@ -89,7 +113,7 @@ function OneVideo({ datas }) {
 
             <span className={styles.push}>Push My Time</span>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
