@@ -1,9 +1,15 @@
+@use "../../assets/scss/media-queries.scss" as *;
+
 .main {
   padding: 60px 0px;
 
   h1 {
     font-weight: 500;
     font-size: 40px;
+
+    @include lt-sm {
+      font-size: 30px;
+    }
   }
 }
 
@@ -17,6 +23,11 @@
   .video {
     height: 99vh;
     aspect-ratio: 16/9;
+
+    @include lt-sm {
+      height: auto;
+      width: 100%;
+    }
 
     .react_player {
       user-select: none;

@@ -1,9 +1,15 @@
+@use "../../assets/scss/media-queries.scss" as *;
+
 .main {
   padding: 60px 0px;
 
   h1 {
     font-weight: 500;
     font-size: 40px;
+
+    @include lt-sm {
+      font-size: 30px;
+    }
   }
 }
 
@@ -18,12 +24,16 @@
 
 .movie {
   width: 32%;
-  margin: 0.5%;
+  margin: 2% 0px;
   cursor: pointer;
   position: relative;
   aspect-ratio: 3/2;
   overflow: hidden;
   border-radius: 10px;
+
+  @include lt-sm {
+    width: 100%;
+  }
 
   &:hover {
     .img {
