@@ -1,15 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./OneVideo.module.scss";
 
 import ReactPlayer from "react-player";
 
-import play_icon from "../../assets/svgs/play.svg";
-import pause_icon from "../../assets/svgs/pause.svg";
 import { useParams } from "react-router-dom";
 import { firestore } from "../../config/firebase.config";
 
 function OneVideo({ datas }) {
-  const [time, setTime] = useState(0);
   const [itemG, setItemG] = useState({
     id: 1,
     img: "",
@@ -18,41 +15,33 @@ function OneVideo({ datas }) {
     watched: "",
     video: "https://hatembenechikh100.wistia.com/medias/izjz1tewm8",
     pausing: false,
-    goto: "",
+    goto: 0,
     is_going_to: false,
   });
 
-  const togglePlay = async () => {
-    let pausing = !itemG.pausing;
-    const res = await firestore
-      .collection("movies")
-      .doc(itemG.id)
-      .set({ ...itemG, pausing: pausing });
-    console.log(res);
-    // .update({ pausing: !pausing });
-  };
+  const playerRef = useRef(null);
+  const params = useParams();
 
   const Pose = async () => {
-    let pausing = !itemG.pausing;
-    const res = await firestore
+    await firestore
       .collection("movies")
       .doc(itemG.id)
       .set({ ...itemG, pausing: true });
-    console.log(res);
-    // .update({ pausing: !pausing });
   };
 
   const Play = async () => {
-    let pausing = !itemG.pausing;
-    const res = await firestore
+    await firestore
       .collection("movies")
       .doc(itemG.id)
-      .set({ ...itemG, pausing: false });
-    console.log(res);
-    // .update({ pausing: !pausing });
+      .set({ ...itemG, pausing: false, goto: 0 });
   };
 
-  const params = useParams();
+  const handleSeek = (seek_time) => {
+    firestore
+      .collection("movies")
+      .doc(itemG.id)
+      .set({ ...itemG, goto: seek_time, pausing: true });
+  };
 
   useEffect(() => {
     if (datas && datas.length > 0) {
@@ -61,24 +50,11 @@ function OneVideo({ datas }) {
     }
   }, [params, datas]);
 
-  const onProgress = (e) => {
-    setTime(e.playedSeconds);
-  };
-
-  const time_fixer = (val) => {
-    if (val < 10) {
-      return `0${val}`;
+  useEffect(() => {
+    if (itemG.goto > 0) {
+      playerRef.current.seekTo(itemG.goto, "seconds");
     }
-    return val;
-  };
-
-  const TextTime = () => {
-    let hour = Math.floor(time / 3600);
-    let minute = Math.floor(time / 60);
-    let second = Math.floor(time % 60);
-
-    return `${time_fixer(hour)}:${time_fixer(minute)}:${time_fixer(second)}`;
-  };
+  }, [itemG.goto]);
 
   return (
     <div className={styles.main}>
@@ -87,6 +63,7 @@ function OneVideo({ datas }) {
       <div className={styles.movie}>
         <div className={styles.video}>
           <ReactPlayer
+            ref={playerRef}
             className={styles.react_player}
             url={itemG.video}
             playing={!itemG.pausing}
@@ -94,10 +71,9 @@ function OneVideo({ datas }) {
             width="100%"
             height="100%"
             autoplay={false}
-            onProgress={onProgress}
             onPause={Pose}
             onPlay={Play}
-            onClickPreview={() => alert("clicked preview")}
+            onSeek={handleSeek}
           />
         </div>
 
