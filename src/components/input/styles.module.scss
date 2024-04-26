@@ -1,0 +1,27 @@
+.main {
+  width: 100%;
+}
+
+.label {
+  display: block;
+  width: 100%;
+}
+
+.input {
+  width: 100%;
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  color: var(--main);
+  font-weight: 500;
+  outline: none;
+}
+
+.label {
+  color: var(--comp-background);
+  font-weight: 500;
+  margin-bottom: 5px;
+}
