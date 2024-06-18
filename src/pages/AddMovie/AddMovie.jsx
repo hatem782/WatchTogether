@@ -43,14 +43,6 @@ function AddMovie() {
       return;
     }
 
-    if (
-      !movie.video.includes("wistia.com") &&
-      !movie.video.includes("youtube.com")
-    ) {
-      alert("Please provide a valid wistia or youtube video url");
-      return;
-    }
-
     const movie_to_save = {
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       id: new Date().getTime(),
